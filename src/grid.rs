@@ -43,7 +43,6 @@ pub struct StaticGrid<T: Copy, const W: usize, const H: usize> {
 }
 
 pub trait Grid<T: GridNum, V: Copy> {
-    fn new() -> Self;
     fn insert(&mut self, key: Coord<T>, value: V) -> Result<()>;
     fn get(&self, key: &Coord<T>) -> Option<&V>;
     fn remove(&mut self, key: &Coord<T>) -> Option<V>;

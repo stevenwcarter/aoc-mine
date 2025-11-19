@@ -12,8 +12,8 @@ pub struct HashGrid<T: GridNum, V: Copy> {
     max_y: Option<T>,
 }
 
-impl<T: GridNum, V: Copy> Grid<T, V> for HashGrid<T, V> {
-    fn new() -> Self {
+impl<T: GridNum, V: Copy> HashGrid<T, V> {
+    pub fn new() -> Self {
         Self {
             data: HashMap::new(),
             min_x: None,
@@ -22,6 +22,9 @@ impl<T: GridNum, V: Copy> Grid<T, V> for HashGrid<T, V> {
             max_y: None,
         }
     }
+}
+
+impl<T: GridNum, V: Copy> Grid<T, V> for HashGrid<T, V> {
     fn set_min_x(mut self, min_x: T) -> Self {
         self.min_x = Some(min_x);
         self
