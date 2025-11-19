@@ -13,6 +13,12 @@ impl<T: GridNum> Coord<T> {
     pub fn y(&self) -> T {
         self.1
     }
+    pub fn range_contains(&self, top_left: &Coord<T>, bottom_right: &Coord<T>) -> bool {
+        self.0 >= top_left.0
+            && self.0 <= bottom_right.0
+            && self.1 >= top_left.1
+            && self.1 <= bottom_right.1
+    }
     pub fn up_n(&self, n: T) -> Option<Self> {
         let new_y = self.1.checked_sub(&n)?;
         Some(Coord(self.0, new_y))

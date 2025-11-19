@@ -5,16 +5,17 @@ use crate::{Coord, Grid, GridNum};
 
 #[derive(Debug, Clone, Default)]
 pub struct LinearGrid<T: GridNum, V: Copy> {
+    _phantom: std::marker::PhantomData<T>,
     data: Vec<V>,
-    width: T,
-    height: T,
+    width: usize,
+    height: usize,
 }
 
 impl<T: GridNum, V: Copy> LinearGrid<T, V> {
-    pub fn new(width: T, height: T, initial: V) -> Self {
+    pub fn new(width: usize, height: usize, initial: V) -> Self {
         let capacity = width * height;
-        let capacity: usize = capacity.try_into().unwrap_or(0);
         Self {
+            _phantom: std::marker::PhantomData,
             data: vec![initial; capacity],
             width,
             height,
@@ -36,22 +37,7 @@ impl<T: GridNum, V: Copy> Grid<T, V> for LinearGrid<T, V> {
     }
 
     fn check_bounds(&self, key: &Coord<T>) -> Result<()> {
-        // only check bounds in debug mode for performance
-        #[cfg(debug_assertions)]
-        {
-            if key.x() < 0u8.into() {
-                bail!("Key x-coordinate is less than minimum x-coordinate");
-            }
-            if key.x() >= self.width {
-                bail!("Key x-coordinate is greater than maximum x-coordinate");
-            }
-            if key.y() < 0u8.into() {
-                bail!("Key y-coordinate is less than minimum y-coordinate");
-            }
-            if key.y() >= self.height {
-                bail!("Key y-coordinate is greater than maximum y-coordinate");
-            }
-        }
+        // no need to check since already constrained
         Ok(())
     }
     fn insert(&mut self, key: Coord<T>, value: V) -> Result<()> {
