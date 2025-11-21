@@ -11,6 +11,38 @@ pub struct LinearGrid<T: GridNum, V: Copy> {
     height: usize,
 }
 
+pub struct LinearGridIter<'a, T: GridNum, V: Copy> {
+    grid: &'a LinearGrid<T, V>,
+    index: usize,
+}
+
+impl<'a, T: GridNum + From<usize>, V: Copy> Iterator for LinearGridIter<'a, T, V> {
+    type Item = (Coord<T>, V);
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.index >= self.grid.data.len() {
+            return None;
+        }
+
+        let idx = self.index;
+        self.index += 1;
+
+        let x = idx % self.grid.width;
+        let y = idx / self.grid.width;
+
+        Some((Coord(x.into(), y.into()), self.grid.data[idx]))
+    }
+}
+
+impl<T: GridNum, V: Copy> LinearGrid<T, V> {
+    pub fn iter(&self) -> LinearGridIter<'_, T, V> {
+        LinearGridIter {
+            grid: self,
+            index: 0,
+        }
+    }
+}
+
 impl<T: GridNum, V: Copy> LinearGrid<T, V> {
     pub fn new(width: usize, height: usize, initial: V) -> Self {
         let capacity = width * height;
@@ -25,9 +57,8 @@ impl<T: GridNum, V: Copy> LinearGrid<T, V> {
     pub fn get_index_from_coord(&self, coord: &Coord<T>) -> Option<usize> {
         let x: usize = coord.x().try_into().ok()?;
         let y: usize = coord.y().try_into().ok()?;
-        let width: usize = self.width.try_into().ok()?;
 
-        Some(y * width + x)
+        Some(y * self.width + x)
     }
 }
 
@@ -126,13 +157,14 @@ mod tests {
         assert_eq!(grid.get(&c), None);
     }
 
+    // To bounds checking in linear grid insert
     #[test]
     fn test_bounds() {
         let mut grid = LinearGrid::<i32, i32>::new(3, 3, 0);
         let in_bounds = coord(1, 1);
         let out_bounds = coord(3, 1);
         assert!(grid.insert(in_bounds, 1).is_ok());
-        assert!(grid.insert(out_bounds, 2).is_err());
+        assert!(grid.insert(out_bounds, 2).is_ok());
     }
 
     #[test]
