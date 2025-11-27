@@ -25,7 +25,8 @@ pub trait GridNum:
     + PartialOrd
     + Ord
     + Num
-    + TryInto<usize>
+    + TryInto<usize, Error: Debug>
+    + TryInto<isize, Error: Debug>
     + CheckedAdd
     + CheckedSub
     + Mul
@@ -43,7 +44,8 @@ impl<T> GridNum for T where
         + PartialOrd
         + Ord
         + Num
-        + TryInto<usize>
+        + TryInto<usize, Error: Debug>
+        + TryInto<isize, Error: Debug>
         + CheckedAdd
         + CheckedSub
         + Mul

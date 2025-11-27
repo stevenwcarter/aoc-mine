@@ -147,6 +147,12 @@ impl<T: GridNum> Coord<T> {
 
         true
     }
+
+    pub fn manhattan(&self) -> usize {
+        let x: isize = self.0.try_into().unwrap();
+        let y: isize = self.1.try_into().unwrap();
+        x.unsigned_abs() + y.unsigned_abs()
+    }
 }
 
 impl<T: GridNum> From<(T, T)> for Coord<T> {
