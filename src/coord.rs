@@ -70,6 +70,18 @@ impl<T: GridNum> Coord<T> {
         let new_x = self.0.checked_add(&n)?;
         Some(Coord(new_x, self.1))
     }
+    pub fn move_up(&mut self) {
+        *self = self.up_n(None, None).unwrap()
+    }
+    pub fn move_down(&mut self) {
+        *self = self.down_n(None, None).unwrap()
+    }
+    pub fn move_left(&mut self) {
+        *self = self.left_n(None, None).unwrap()
+    }
+    pub fn move_right(&mut self) {
+        *self = self.right_n(None, None).unwrap()
+    }
     pub fn up(&self, range: Option<T>) -> Option<Self> {
         self.up_n(None, range)
     }
@@ -134,6 +146,12 @@ impl<T: GridNum> Coord<T> {
         }
 
         true
+    }
+
+    pub fn manhattan(&self) -> usize {
+        let x: isize = self.0.try_into().unwrap();
+        let y: isize = self.1.try_into().unwrap();
+        x.unsigned_abs() + y.unsigned_abs()
     }
 }
 

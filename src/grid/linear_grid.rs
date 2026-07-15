@@ -60,6 +60,13 @@ impl<T: GridNum, V: Copy> LinearGrid<T, V> {
 
         Some(y * self.width + x)
     }
+
+    pub fn width(&self) -> usize {
+        self.width
+    }
+    pub fn height(&self) -> usize {
+        self.height
+    }
 }
 
 impl<T: GridNum, V: Copy> Grid<T, V> for LinearGrid<T, V> {

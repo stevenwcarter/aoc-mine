@@ -1,5 +1,5 @@
 use anyhow::{Result, bail};
-use hashbrown::HashMap;
+use hashbrown::{DefaultHashBuilder, HashMap, hash_map::Entry};
 
 use crate::{Coord, Grid, GridNum};
 
@@ -21,6 +21,14 @@ impl<T: GridNum, V: Copy> HashGrid<T, V> {
             min_y: None,
             max_y: None,
         }
+    }
+
+    pub fn iter(&self) -> hashbrown::hash_map::Iter<'_, Coord<T>, V> {
+        self.data.iter()
+    }
+
+    pub fn entry<'a>(&'a mut self, coord: Coord<T>) -> Entry<'a, Coord<T>, V, DefaultHashBuilder> {
+        self.data.entry(coord)
     }
 
     pub fn set_min_x(mut self, min_x: T) -> Self {
